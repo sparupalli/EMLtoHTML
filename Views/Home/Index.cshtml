@@ -1,0 +1,44 @@
+﻿@model IEnumerable<EMLtoHTML.Models.Email>
+
+@{
+    ViewBag.Title = "Emails";
+    WebGrid grid = new WebGrid(Model, rowsPerPage: 40, defaultSort: "time");
+    grid.SortDirection = SortDirection.Descending;
+}
+
+<div class="row">
+    <div class="span6">
+        <h2>Emails</h2>
+    </div>
+</div>
+
+
+<div class="pagination pagination-small pagination-right">
+    @grid.Pager(mode: WebGridPagerModes.All, numericLinksCount: 20)
+</div>
+
+@grid.Table(
+    tableStyle: "table table-striped table-hover table-bordered table-condensed",
+    columns: grid.Columns(
+        grid.Column("time"),
+        grid.Column(columnName: "fileName", format: (item) => Html.ActionLink(((string)item.fileName), "ViewContent", new { fileName = item.fileName })),
+        grid.Column("emailSubject", style: "span10 strong"),
+        grid.Column("fromAddress"),
+        grid.Column("toAddress"),
+        grid.Column(columnName: "Actions", format:
+        @<div class="btn-group">
+            <a class="btn btn-mini btn-info" href="@Url.Action("DownloadFile", "Home", new { fileName = item.fileName })">
+                <i class="icon-download-alt icon-white " title="Download"></i>
+            </a>
+
+            <a class="btn btn-mini btn-danger" href="@Url.Action("ClearFolder", "Home", new { fileName = item.fileName })">
+                <i class="icon-trash icon-white" title="Delete"></i>
+            </a>
+        </div>
+                   )
+            ))
+<div class="pagination pagination-small pagination-right">
+    @grid.Pager(mode: WebGridPagerModes.All, numericLinksCount: 20)
+</div>
+
+
